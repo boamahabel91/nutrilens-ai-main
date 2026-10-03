@@ -604,14 +604,7 @@ input:focus-visible {
   }
 }
 
-.researchNotice {
-  max-width: 1380px;
-  margin: 18px auto 0;
-  color: $muted;
-  font-size: 10px;
-  line-height: 1.6;
-  text-align: center;
-}
+
 
 @keyframes achievementPop {
   from {
@@ -760,5 +753,26 @@ input:focus-visible {
 @media (max-width: 640px) {
   .nutritionGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Optional user control for clearing saved streak, logs and achievements. */
+.resetProgressButton {
+  width: 100%;
+  margin-top: 16px;
+  padding: 11px 14px;
+  border: 1px solid #d8ddd9;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #5d6761;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: #f7f9f7;
+    border-color: #bfc8c1;
+    color: #263b2e;
   }
 }

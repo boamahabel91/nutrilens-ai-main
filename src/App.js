@@ -18,6 +18,7 @@ const getDayDifference = (previousDate, currentDate) => {
 // Values are shown per 100 g because the app cannot estimate portion size from an image.
 const nutritionReference = [
   { keywords: ["banana"], name: "Banana", calories: 89, protein: 1.1, carbs: 22.8, fat: 0.3 },
+  { keywords: ["apple"], name: "Apple", calories: 52, protein: 0.3, carbs: 13.8, fat: 0.2 },
   { keywords: ["orange"], name: "Orange", calories: 47, protein: 0.9, carbs: 11.8, fat: 0.1 },
   { keywords: ["strawberry"], name: "Strawberry", calories: 32, protein: 0.7, carbs: 7.7, fat: 0.3 },
   { keywords: ["broccoli"], name: "Broccoli", calories: 34, protein: 2.8, carbs: 6.6, fat: 0.4 },
@@ -31,16 +32,58 @@ const nutritionReference = [
   { keywords: ["hotdog", "hot dog"], name: "Hot dog", calories: 290, protein: 10.0, carbs: 4.2, fat: 26.0 },
   { keywords: ["bagel"], name: "Bagel", calories: 250, protein: 10.0, carbs: 49.0, fat: 1.5 },
   { keywords: ["pretzel"], name: "Pretzel", calories: 380, protein: 10.0, carbs: 80.0, fat: 3.0 },
-  { keywords: ["ice cream"], name: "Ice cream", calories: 207, protein: 3.5, carbs: 23.6, fat: 11.0 },
+  { keywords: ["ice cream", "ice lolly"], name: "Ice cream", calories: 207, protein: 3.5, carbs: 23.6, fat: 11.0 },
+  { keywords: ["bread", "loaf", "french loaf"], name: "Bread", calories: 265, protein: 9.0, carbs: 49.0, fat: 3.2 },
+  { keywords: ["burrito"], name: "Burrito", calories: 206, protein: 8.0, carbs: 24.0, fat: 9.0 },
+  { keywords: ["guacamole"], name: "Guacamole", calories: 150, protein: 2.0, carbs: 8.0, fat: 13.0 },
+  { keywords: ["carbonara"], name: "Pasta", calories: 191, protein: 7.0, carbs: 23.0, fat: 8.0 },
+  { keywords: ["meat loaf", "meatloaf"], name: "Meatloaf", calories: 212, protein: 14.0, carbs: 9.0, fat: 13.0 },
+  { keywords: ["mashed potato", "potato"], name: "Potato", calories: 87, protein: 1.9, carbs: 20.1, fat: 0.1 },
+  { keywords: ["trifle"], name: "Trifle", calories: 186, protein: 3.0, carbs: 29.0, fat: 6.5 },
 ];
 
-// Finds nutrition information only when MobileNet's best prediction matches a supported food.
+// Some common ImageNet food labels are broad. If there is no exact reference above,
+// these categories provide a clearly labelled rough estimate instead of leaving food blank.
+const foodCategoryEstimates = [
+  { keywords: ["fruit", "berry"], name: "Estimated fruit", calories: 60, protein: 0.8, carbs: 15.0, fat: 0.3 },
+  { keywords: ["vegetable", "salad", "greens"], name: "Estimated vegetable", calories: 35, protein: 2.0, carbs: 7.0, fat: 0.4 },
+  { keywords: ["cake", "pie", "dessert", "pudding", "pastry", "cookie", "biscuit"], name: "Estimated dessert", calories: 330, protein: 5.0, carbs: 45.0, fat: 15.0 },
+  { keywords: ["sandwich", "wrap"], name: "Estimated sandwich", calories: 240, protein: 10.0, carbs: 28.0, fat: 10.0 },
+  { keywords: ["pasta", "noodle", "spaghetti"], name: "Estimated pasta dish", calories: 180, protein: 6.0, carbs: 30.0, fat: 4.0 },
+  { keywords: ["rice"], name: "Estimated rice dish", calories: 150, protein: 3.0, carbs: 30.0, fat: 2.0 },
+  { keywords: ["chicken", "hen", "drumstick"], name: "Estimated chicken", calories: 215, protein: 27.0, carbs: 0.0, fat: 11.0 },
+  { keywords: ["steak", "beef", "meat"], name: "Estimated meat", calories: 250, protein: 26.0, carbs: 0.0, fat: 16.0 },
+  { keywords: ["fish", "salmon", "tuna"], name: "Estimated fish", calories: 180, protein: 22.0, carbs: 0.0, fat: 10.0 },
+  { keywords: ["soup", "stew"], name: "Estimated soup/stew", calories: 90, protein: 5.0, carbs: 10.0, fat: 3.5 },
+];
+
+// Labels that clearly describe objects rather than food should never receive nutrition values.
+const nonFoodKeywords = [
+  "plate", "bowl", "cup", "mug", "fork", "spoon", "knife", "bottle", "can",
+  "table", "chair", "phone", "computer", "keyboard", "mouse", "car", "bus", "train",
+  "dog", "cat", "bird", "person", "shoe", "bag", "book", "clock", "camera", "screen"
+];
+
 const findNutritionEstimate = (predictionName) => {
   if (!predictionName) return null;
+
   const normalisedPrediction = predictionName.toLowerCase();
-  return nutritionReference.find((food) =>
+
+  if (nonFoodKeywords.some((keyword) => normalisedPrediction.includes(keyword))) {
+    return null;
+  }
+
+  const exactFood = nutritionReference.find((food) =>
     food.keywords.some((keyword) => normalisedPrediction.includes(keyword))
-  ) || null;
+  );
+  if (exactFood) return { ...exactFood, estimated: false };
+
+  const categoryFood = foodCategoryEstimates.find((food) =>
+    food.keywords.some((keyword) => normalisedPrediction.includes(keyword))
+  );
+  if (categoryFood) return { ...categoryFood, estimated: true };
+
+  return null;
 };
 
 // Milestones is implemented here and achievement system. A badge unlocks when total logs reaches its target.
@@ -217,6 +260,22 @@ function App() {
     }
   }, [selectedImage]);
 
+  // Allows the user to clear their saved gamification progress and start again.
+  const resetProgress = () => {
+    const confirmed = window.confirm(
+      "Reset your progress? This will clear your food logs, daily streak and achievements. This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    setCurrentStreak(0);
+    setTotalLogs(0);
+    setLastLogDate(null);
+    setFeedbackMessage("");
+    setNewAchievement("");
+    localStorage.removeItem(PROGRESS_KEY);
+  };
+
   // Find the next locked achievement and calculate progress towards it.
   const nextAchievement = achievementLevels.find(
     (achievement) => totalLogs < achievement.target
@@ -329,7 +388,7 @@ function App() {
                 <div className="nutritionHeader">
                   <div>
                     <span className="resultLabel">Estimated nutrition</span>
-                    <h3>{nutritionEstimate ? nutritionEstimate.name : "No supported nutrition match"}</h3>
+                    <h3>{nutritionEstimate ? nutritionEstimate.name : "Nutritional information not found"}</h3>
                   </div>
                   <span className="estimateBadge">per 100 g</span>
                 </div>
@@ -343,12 +402,12 @@ function App() {
                       <div><strong>{nutritionEstimate.fat} g</strong><span>fat</span></div>
                     </div>
                     <p className="nutritionDisclaimer">
-                      Approximate reference values only. NutriLens AI does not estimate portion size, so these figures are not the nutritional content of the photographed meal.
+                      Estimated values per 100 g. Actual nutrition varies by ingredients, preparation and portion size.
                     </p>
                   </>
                 ) : (
                   <p className="nutritionDisclaimer">
-                    The best MobileNet label is not in this prototype's nutrition reference list. No calorie or nutrient value is shown rather than generating an unsupported estimate.
+                    Nutritional information was not found for this item.
                   </p>
                 )}
               </div>
@@ -435,6 +494,10 @@ function App() {
           <p className="streakNote">
             The streak increases once per consecutive calendar day. Multiple successful logs on the same day increase total logs but do not inflate the daily streak.
           </p>
+
+          <button type="button" className="resetProgressButton" onClick={resetProgress}>
+            Reset Progress
+          </button>
         </aside>
       </main>
 
