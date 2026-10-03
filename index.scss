@@ -1,0 +1,219 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.appShell {
+  min-height: 100vh;
+}
+
+.pageTitle {
+  text-align: center;
+  font-weight: 400;
+  color: #fff;
+  background: blueviolet;
+  font-size: 27px;
+  padding: 8px 0;
+}
+
+.controlsBar {
+  margin: 15px 0;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  input[type="text"] {
+    max-width: 400px;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 16px;
+    border: 1px solid #222;
+    outline: none;
+  }
+
+  .hiddenFileField {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .dividerText {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px;
+    font-weight: 500;
+  }
+
+  .uploadButton {
+    padding: 8px 16px;
+    font-size: 16px;
+    background: #333;
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+  }
+}
+
+.contentWrap {
+  padding: 0 10px;
+}
+
+.displaySection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
+}
+
+.previewPanel {
+  width: 60%;
+  flex: 0 0 60%;
+  max-width: 900px;
+  height: 70vmin;
+  display: block;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  &:empty {
+    display: none;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.predictionPanel {
+  padding: 30px;
+  width: 100%;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    padding: 0;
+  }
+
+  .predictionCard {
+    border: 1px solid #333;
+    margin: 0 0 10px;
+    padding: 10px;
+
+    &:first-of-type {
+      background-color: #333;
+      border-color: #333;
+
+      .predictionName {
+        color: #fff;
+      }
+
+      .predictionScore {
+        color: #dfdfdf;
+      }
+    }
+
+    .predictionName {
+      font-size: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .predictionScore {
+      display: block;
+      font-weight: 300;
+      margin-top: 4px;
+
+      .topMatchBadge {
+        background: #fff;
+        padding: 2px 6px;
+        color: #333;
+        margin-left: 6px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.identifyButton {
+  padding: 12px 17px;
+  font-size: 18px;
+  background: blueviolet;
+  color: #fff;
+  display: inline-block;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.historySection {
+  margin: 40px 0 0;
+  background: #dac2ff;
+  padding: 10px;
+
+  h2 {
+    color: #111;
+    font-size: 26px;
+    margin: 10px 0;
+  }
+
+  .historyGrid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .historyCard {
+    flex: 0 0 20%;
+    cursor: pointer;
+
+    @media (max-width: 1100px) {
+      flex: 0 0 25%;
+    }
+
+    @media (max-width: 870px) {
+      flex: 0 0 33.3%;
+    }
+
+    @media (max-width: 700px) {
+      flex: 0 0 50%;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+
+      @media (max-width: 700px) {
+        height: 260px;
+      }
+    }
+  }
+}

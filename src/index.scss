@@ -1,0 +1,764 @@
+/* ============================================================
+   NUTRILENS AI - APPLICATION STYLES
+   This SCSS file controls the layout, cards, buttons, progress
+   area, achievements and responsive design of the application.
+   Comments are included to make each section easier to follow.
+   ============================================================ */
+
+$ink: #17211b;
+$muted: #68736c;
+$surface: #ffffff;
+$soft: #f3f7f4;
+$line: #dfe7e1;
+$green: #256d4a;
+$green-dark: #194d35;
+$green-soft: #e7f4ec;
+$gold-soft: #fff6dd;
+$gold: #936b00;
+$error-soft: #fff0f0;
+$error: #a93a3a;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Overall page appearance */
+body {
+  margin: 0;
+  background: #f7faf8;
+  color: $ink;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(37, 109, 74, 0.2);
+  outline-offset: 2px;
+}
+
+/* Main wrapper around the complete application */
+.appShell {
+  min-height: 100vh;
+  padding: 38px clamp(18px, 4vw, 64px) 28px;
+}
+
+/* Top section containing the app title and AI model status */
+.appHeader {
+  max-width: 1380px;
+  margin: 0 auto 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+
+  .eyebrow {
+    display: block;
+    color: $green;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .pageTitle {
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+  }
+
+  .pageSubtitle {
+    color: $muted;
+    max-width: 720px;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+}
+
+.modelStatus {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid $line;
+  background: $surface;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+
+  .statusDot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #a6aea9;
+  }
+
+  &.ready .statusDot {
+    background: $green;
+  }
+}
+
+.mainLayout {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(310px, 0.75fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.workspaceCard,
+.progressCard,
+.historySection {
+  background: $surface;
+  border: 1px solid $line;
+  border-radius: 22px;
+  box-shadow: 0 12px 35px rgba(23, 33, 27, 0.05);
+}
+
+/* Main food-recognition card */
+.workspaceCard {
+  padding: 26px;
+}
+
+/* Gamification progress panel */
+.progressCard {
+  padding: 26px;
+  position: sticky;
+  top: 22px;
+}
+
+.sectionHeading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+
+  h2 {
+    font-size: 21px;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    max-width: 420px;
+    color: $muted;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: right;
+  }
+
+  &.compact {
+    margin-bottom: 18px;
+  }
+}
+
+.sectionNumber {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: inline-grid;
+  place-items: center;
+  background: $green-soft;
+  color: $green-dark;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.controlsBar {
+  display: grid;
+  grid-template-columns: auto auto minmax(180px, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: $soft;
+  border: 1px solid $line;
+  border-radius: 16px;
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: $ink;
+    background: $surface;
+    border: 1px solid $line;
+    border-radius: 11px;
+    outline: none;
+
+    &:focus {
+      border-color: $green;
+    }
+  }
+
+  .hiddenFileField {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+  }
+
+  .dividerText {
+    color: $muted;
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+
+.uploadButton,
+.identifyButton {
+  border: 0;
+  cursor: pointer;
+  border-radius: 11px;
+  font-weight: 600;
+  transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+.uploadButton {
+  padding: 12px 17px;
+  background: $ink;
+  color: #fff;
+}
+
+.contentWrap {
+  padding-top: 20px;
+}
+
+.emptyState {
+  min-height: 360px;
+  border: 1px dashed #c9d5cc;
+  border-radius: 18px;
+  background: #fbfdfb;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  padding: 30px;
+
+  .emptyIcon {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: $green-soft;
+    color: $green;
+    font-size: 30px;
+    margin-bottom: 15px;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin-bottom: 7px;
+  }
+
+  p {
+    max-width: 470px;
+    color: $muted;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+}
+
+.displaySection {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(270px, 0.75fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.previewPanel {
+  min-width: 0;
+  min-height: 410px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: $soft;
+
+  &:empty {
+    display: none;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 410px;
+    max-height: 600px;
+    object-fit: cover;
+  }
+}
+
+.predictionPanel {
+  background: $soft;
+  border: 1px solid $line;
+  border-radius: 18px;
+  padding: 18px;
+
+  .resultLabel {
+    display: block;
+    color: $muted;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 13px;
+  }
+
+  .predictionCard {
+    background: $surface;
+    border: 1px solid $line;
+    border-radius: 13px;
+    margin-bottom: 10px;
+    padding: 14px;
+
+    &:first-of-type {
+      border-color: rgba(37, 109, 74, 0.35);
+      box-shadow: inset 3px 0 0 $green;
+    }
+
+    > div {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .predictionName {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+      display: block;
+    }
+
+    .predictionScore {
+      display: block;
+      color: $muted;
+      font-size: 12px;
+      margin-top: 7px;
+    }
+
+    .topMatchBadge {
+      flex: 0 0 auto;
+      background: $green-soft;
+      color: $green-dark;
+      padding: 4px 7px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+.identifyButton {
+  margin-top: 16px;
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 15px;
+  background: $green;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: $green-dark;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.errorMessage,
+.feedbackMessage,
+.achievementMessage {
+  margin-top: 14px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.errorMessage {
+  background: $error-soft;
+  color: $error;
+  border: 1px solid rgba(169, 58, 58, 0.15);
+}
+
+.feedbackMessage {
+  background: $green-soft;
+  color: $green-dark;
+}
+
+.achievementMessage {
+  background: $gold-soft;
+  color: $gold;
+  animation: achievementPop 0.3s ease;
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.statCard {
+  padding: 17px;
+  background: $soft;
+  border: 1px solid $line;
+  border-radius: 15px;
+
+  .statValue,
+  .statLabel {
+    display: block;
+  }
+
+  .statValue {
+    font-size: 31px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .statLabel {
+    color: $muted;
+    font-size: 11px;
+    margin-top: 7px;
+  }
+}
+
+.milestoneBlock {
+  margin-top: 18px;
+  padding: 17px;
+  border: 1px solid $line;
+  border-radius: 15px;
+
+  .milestoneHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+
+    span {
+      color: $muted;
+    }
+  }
+
+  .progressTrack {
+    height: 8px;
+    background: #e7ece8;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 12px 0 9px;
+  }
+
+  .progressFill {
+    height: 100%;
+    background: $green;
+    border-radius: inherit;
+    transition: width 0.35s ease;
+  }
+
+  p {
+    color: $muted;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+}
+
+.achievementList {
+  margin-top: 22px;
+
+  h3 {
+    font-size: 14px;
+    margin-bottom: 11px;
+  }
+}
+
+.achievementItem {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid $line;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  .achievementMark {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: $soft;
+    color: $muted;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    font-size: 12px;
+  }
+
+  span {
+    color: $muted;
+    font-size: 10px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  &.unlocked .achievementMark {
+    background: $green-soft;
+    color: $green;
+  }
+
+  &.locked {
+    opacity: 0.68;
+  }
+}
+
+.streakNote {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid $line;
+  color: $muted;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.historySection {
+  max-width: 1380px;
+  margin: 22px auto 0;
+  padding: 26px;
+
+  .historyGrid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .historyCard {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 13px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.035);
+    }
+  }
+}
+
+.researchNotice {
+  max-width: 1380px;
+  margin: 18px auto 0;
+  color: $muted;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@keyframes achievementPop {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1050px) {
+  .mainLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .progressCard {
+    position: static;
+  }
+
+  .historySection .historyGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .appShell {
+    padding: 24px 14px;
+  }
+
+  .appHeader,
+  .sectionHeading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sectionHeading p {
+    text-align: left;
+  }
+
+  .modelStatus {
+    align-self: flex-start;
+  }
+
+  .workspaceCard,
+  .progressCard,
+  .historySection {
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .controlsBar {
+    grid-template-columns: 1fr;
+  }
+
+  .dividerText {
+    justify-content: center;
+  }
+
+  .displaySection {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel,
+  .previewPanel img {
+    min-height: 310px;
+  }
+
+  .historySection .historyGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .historySection .historyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* Nutrition feedback shown after a successful classification. */
+.nutritionPanel {
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid rgba(31, 122, 84, 0.18);
+  border-radius: 18px;
+  background: rgba(239, 250, 244, 0.78);
+}
+
+.nutritionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.nutritionHeader h3 {
+  margin: 4px 0 0;
+}
+
+.estimateBadge {
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.nutritionGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.nutritionGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 13px;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.nutritionGrid strong {
+  font-size: 1.05rem;
+}
+
+.nutritionGrid span,
+.nutritionDisclaimer {
+  font-size: 0.8rem;
+  color: #667085;
+}
+
+.nutritionDisclaimer {
+  margin: 14px 0 0;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .nutritionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
