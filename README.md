@@ -2,7 +2,8 @@
 ## Available Scripts
 
 if you have not installed npm install, you can run'
-###'npm legacy-peer-deps'
+
+### `npm legacy-peer-deps`
 
 After that
 
