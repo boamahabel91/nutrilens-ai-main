@@ -42,8 +42,7 @@ const nutritionReference = [
   { keywords: ["trifle"], name: "Trifle", calories: 186, protein: 3.0, carbs: 29.0, fat: 6.5 },
 ];
 
-// Some common ImageNet food labels are broad. If there is no exact reference above,
-// these categories provide a clearly labelled rough estimate instead of leaving food blank.
+
 const foodCategoryEstimates = [
   { keywords: ["fruit", "berry"], name: "Estimated fruit", calories: 60, protein: 0.8, carbs: 15.0, fat: 0.3 },
   { keywords: ["vegetable", "salad", "greens"], name: "Estimated vegetable", calories: 35, protein: 2.0, carbs: 7.0, fat: 0.4 },
@@ -57,7 +56,6 @@ const foodCategoryEstimates = [
   { keywords: ["soup", "stew"], name: "Estimated soup/stew", calories: 90, protein: 5.0, carbs: 10.0, fat: 3.5 },
 ];
 
-// Labels that clearly describe objects rather than food should never receive nutrition values.
 const nonFoodKeywords = [
   "plate", "bowl", "cup", "mug", "fork", "spoon", "knife", "bottle", "can",
   "table", "chair", "phone", "computer", "keyboard", "mouse", "car", "bus", "train",
@@ -94,15 +92,13 @@ const achievementLevels = [
 ];
 
 function App() {
-  // These values control the AI model, selected image and prediction results.
   const [loadingModel, setLoadingModel] = useState(false);
   const [classifier, setClassifier] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [predictions, setPredictions] = useState([]);
   const [recentImages, setRecentImages] = useState([]);
 
-  // -------------------- GAMIFICATION STATE --------------------
-  // These values track the daily streak, total successful logs and user feedback.
+  // The values track the daily streak, total successful logs and user feedback.
   const [currentStreak, setCurrentStreak] = useState(0);
   const [totalLogs, setTotalLogs] = useState(0);
   const [lastLogDate, setLastLogDate] = useState(null);
@@ -162,13 +158,11 @@ function App() {
     hiddenFileInputRef.current.click();
   };
 
-  // Called only after a successful image classification.
-  // It updates total logs, calculates the real daily streak and checks for achievements.
+
   const updateProgressAfterSuccessfulLog = () => {
     const today = getToday();
     let nextStreak = currentStreak;
 
-    // Multiple classifications on the same day count as logs, but not extra streak days.
     if (!lastLogDate) {
       nextStreak = 1;
     } else if (lastLogDate !== today) {
@@ -240,7 +234,7 @@ function App() {
   useEffect(() => {
     initializeModel();
 
-    // Read any streak/log data that was saved during an earlier browser session.
+    // It will reads any streak/log data that was saved during an earlier browser session.
     const savedProgress = localStorage.getItem(PROGRESS_KEY);
     if (savedProgress) {
       try {
@@ -276,7 +270,6 @@ function App() {
     localStorage.removeItem(PROGRESS_KEY);
   };
 
-  // Find the next locked achievement and calculate progress towards it.
   const nextAchievement = achievementLevels.find(
     (achievement) => totalLogs < achievement.target
   );
@@ -292,7 +285,6 @@ function App() {
       )
     : 100;
 
-  // Everything below describes what is displayed on the page.
   return (
     <div className="appShell">
       <header className="appHeader">
